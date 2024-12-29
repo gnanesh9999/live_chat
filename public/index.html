@@ -4,16 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Chat</title>
-    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e0f7fa;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #42a5f5, #478ed1);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        #messages {
+            max-width: 600px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+            max-width: 80%;
+            word-wrap: break-word;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: relative;
+        }
+
+        .message:hover {
+            transform: translateX(5px) scale(1.02);
+            background-color: #f0f0f0;
+        }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        #messageInput {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            outline: none;
+            margin-right: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #messageInput:focus {
+            border-color: #0056b3;
+        }
+
+        #sendButton, #uploadImage {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #sendButton {
+            background-color: #007bff;
+            color: white;
+            margin-right: 10px;
+            width: 15%;
+        }
+
+        #sendButton:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        #uploadImage {
+            background-color: #4caf50;
+            color: white;
+            width: auto;
+        }
+
+        #uploadImage:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #messageInput {
+                width: 70%;
+            }
+
+            #sendButton {
+                width: 20%;
+            }
+
+            #uploadImage {
+                width: 20%;
+            }
+
+            #messages {
+                height: 350px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+
 </head>
 <body>
-    <h1>Welcome to the Live Chat App!</h1>
-    <div id="messages"></div>
     <div>
-        <input id="messageInput" placeholder="Type a message..." />
-        <button id="sendButton">Send</button>
-        <input type="file" id="imageInput" accept="image/*" />
-        <label id="uploadImage" for="imageInput">Upload Image</label>
+        <h1>Welcome to the Live Chat App!</h1>
+        <div id="messages"></div>
+        <div>
+            <input id="messageInput" placeholder="Type a message..." />
+            <button id="sendButton">Send</button>
+            
+            <!-- Updated image input to accept only .jpg and .jpeg -->
+            <input type="file" id="imageInput" accept=".jpg, .jpeg" />
+            <label id="uploadImage" for="imageInput">Upload Image</label>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -28,20 +172,20 @@
         // Send message when Send button is clicked
         sendButton.onclick = () => {
             const msg = messageInput.value;
-            if (msg.trim() !== "") {  // Don't send empty messages
+            if (msg.trim() !== "") {
                 socket.emit("message", { type: "text", content: msg });
-                messageInput.value = "";  // Clear input field
+                messageInput.value = "";
             }
         };
 
         // Send message when Enter key is pressed
         messageInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
-                event.preventDefault();  // Prevent form submission
+                event.preventDefault();
                 const msg = messageInput.value;
-                if (msg.trim() !== "") {  // Don't send empty messages
+                if (msg.trim() !== "") {
                     socket.emit("message", { type: "text", content: msg });
-                    messageInput.value = "";  // Clear input field
+                    messageInput.value = "";
                 }
             }
         });
@@ -54,7 +198,7 @@
                 reader.onloadend = () => {
                     socket.emit("message", { type: "image", content: reader.result });
                 };
-                reader.readAsDataURL(file);  // Read file as base64 string
+                reader.readAsDataURL(file);
             }
         });
 
@@ -72,7 +216,7 @@
             }
 
             messages.appendChild(messageElement);
-            messages.scrollTop = messages.scrollHeight;  // Scroll to bottom
+            messages.scrollTop = messages.scrollHeight;
         });
     </script>
 </body>
