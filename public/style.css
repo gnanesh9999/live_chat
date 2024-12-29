@@ -6,83 +6,132 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0f7fa;
     color: #333;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #42a5f5, #478ed1);
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: white;
+    font-size: 32px;
     margin-bottom: 20px;
+    letter-spacing: 2px;
 }
 
 #messages {
     max-width: 600px;
-    margin: 0 auto;
-    background-color: white;
+    width: 100%;
+    background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .message {
     margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #e6e6e6;
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
     max-width: 80%;
     word-wrap: break-word;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    position: relative;
+}
+
+.message:hover {
+    transform: translateX(5px) scale(1.02);
+    background-color: #f0f0f0;
 }
 
 .message img {
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: 10px;
     margin-top: 10px;
 }
 
 #messageInput {
-    width: 75%;
-    padding: 10px;
+    width: 80%;
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    outline: none;
+    margin-right: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#messageInput:focus {
+    border-color: #0056b3;
+}
+
+#sendButton, #uploadImage {
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 #sendButton {
-    width: 20%;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
     background-color: #007bff;
     color: white;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-right: 10px;
+    width: 15%;
 }
 
 #sendButton:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 #uploadImage {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #28a745;
+    background-color: #4caf50;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
+    width: auto;
 }
 
 #uploadImage:hover {
-    background-color: #218838;
+    background-color: #45a049;
+    transform: translateY(-2px);
 }
 
 #imageInput {
     display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #messageInput {
+        width: 70%;
+    }
+
+    #sendButton {
+        width: 20%;
+    }
+
+    #uploadImage {
+        width: 20%;
+    }
+
+    #messages {
+        height: 350px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
 }
