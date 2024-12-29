@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static("public"));
+app.use(express.static("public")); // Serve static files
 
 io.on("connection", (socket) => {
     console.log("A user connected");
