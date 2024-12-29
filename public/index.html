@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Chat</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Welcome to the Live Chat App!</h1>
     <div id="messages"></div>
-    <input id="messageInput" placeholder="Type a message..." />
-    <button id="sendButton">Send</button>
+    <div>
+        <input id="messageInput" placeholder="Type a message..." />
+        <button id="sendButton">Send</button>
+        <input type="file" id="imageInput" accept="image/*" />
+        <label id="uploadImage" for="imageInput">Upload Image</label>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -18,12 +23,13 @@
         const messages = document.getElementById("messages");
         const messageInput = document.getElementById("messageInput");
         const sendButton = document.getElementById("sendButton");
+        const imageInput = document.getElementById("imageInput");
 
         // Send message when Send button is clicked
         sendButton.onclick = () => {
             const msg = messageInput.value;
             if (msg.trim() !== "") {  // Don't send empty messages
-                socket.emit("message", msg);
+                socket.emit("message", { type: "text", content: msg });
                 messageInput.value = "";  // Clear input field
             }
         };
@@ -31,20 +37,42 @@
         // Send message when Enter key is pressed
         messageInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
-                event.preventDefault();  // Prevent form submission if inside a form
+                event.preventDefault();  // Prevent form submission
                 const msg = messageInput.value;
                 if (msg.trim() !== "") {  // Don't send empty messages
-                    socket.emit("message", msg);
+                    socket.emit("message", { type: "text", content: msg });
                     messageInput.value = "";  // Clear input field
                 }
+            }
+        });
+
+        // Handle image uploads
+        imageInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    socket.emit("message", { type: "image", content: reader.result });
+                };
+                reader.readAsDataURL(file);  // Read file as base64 string
             }
         });
 
         // Display incoming messages
         socket.on("message", (msg) => {
             const messageElement = document.createElement("div");
-            messageElement.textContent = msg;
+            messageElement.classList.add("message");
+            
+            if (msg.type === "text") {
+                messageElement.textContent = msg.content;
+            } else if (msg.type === "image") {
+                const imageElement = document.createElement("img");
+                imageElement.src = msg.content;
+                messageElement.appendChild(imageElement);
+            }
+
             messages.appendChild(messageElement);
+            messages.scrollTop = messages.scrollHeight;  // Scroll to bottom
         });
     </script>
 </body>
