@@ -57,6 +57,7 @@
             word-wrap: break-word;
             transition: transform 0.3s ease, background-color 0.3s ease;
             position: relative;
+            animation: glow 1s ease-out;
         }
 
         .message:hover {
@@ -71,7 +72,7 @@
         }
 
         #messageInput {
-            width: 80%;
+            width: 65%;
             padding: 12px;
             font-size: 16px;
             border: 2px solid #007bff;
@@ -117,57 +118,67 @@
             transform: translateY(-2px);
         }
 
+        #emojiPicker {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        #emojiPicker span {
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #emojiPicker span:hover {
+            transform: scale(1.2);
+        }
+
         #imageInput {
             display: none;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            #messageInput {
-                width: 70%;
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px #007bff;
             }
-
-            #sendButton {
-                width: 20%;
-            }
-
-            #uploadImage {
-                width: 20%;
-            }
-
-            #messages {
-                height: 350px;
-            }
-
-            h1 {
-                font-size: 24px;
+            100% {
+                box-shadow: none;
             }
         }
     </style>
-
 </head>
 <body>
     <div>
         <h1>Welcome to the Live Chat App!</h1>
+        <div id="emojiPicker">
+            😀 😂 🥰 😎 🤔 🙃 😢 🎉 ❤️ 🥳
+        </div>
         <div id="messages"></div>
         <div>
             <input id="messageInput" placeholder="Type a message..." />
             <button id="sendButton">Send</button>
-            
-            <!-- Updated image input to accept only .jpg and .jpeg -->
             <input type="file" id="imageInput" accept=".jpg, .jpeg" />
             <label id="uploadImage" for="imageInput">Upload Image</label>
         </div>
+        <audio id="notificationSound" src="notification.mp3"></audio>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Establish WebSocket connection
         const socket = io();
         const messages = document.getElementById("messages");
         const messageInput = document.getElementById("messageInput");
         const sendButton = document.getElementById("sendButton");
         const imageInput = document.getElementById("imageInput");
+        const emojiPicker = document.getElementById("emojiPicker");
+        const notificationSound = document.getElementById("notificationSound");
 
         // Send message when Send button is clicked
         sendButton.onclick = () => {
@@ -190,6 +201,14 @@
             }
         });
 
+        // Emoji picker functionality
+        emojiPicker.addEventListener("click", (event) => {
+            if (event.target.tagName === "SPAN") {
+                messageInput.value += event.target.textContent;
+                messageInput.focus();
+            }
+        });
+
         // Handle image uploads
         imageInput.addEventListener("change", (event) => {
             const file = event.target.files[0];
@@ -206,7 +225,7 @@
         socket.on("message", (msg) => {
             const messageElement = document.createElement("div");
             messageElement.classList.add("message");
-            
+
             if (msg.type === "text") {
                 messageElement.textContent = msg.content;
             } else if (msg.type === "image") {
@@ -217,6 +236,9 @@
 
             messages.appendChild(messageElement);
             messages.scrollTop = messages.scrollHeight;
+
+            // Play notification sound
+            notificationSound.play();
         });
     </script>
 </body>
