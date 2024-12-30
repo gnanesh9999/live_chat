@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat</title>
-
+    <title>Live Chat App</title>
     <style>
         /* General Reset */
         * {
@@ -25,99 +24,36 @@
             background: linear-gradient(135deg, #42a5f5, #478ed1);
         }
 
-        h1 {
-            text-align: center;
-            color: white;
-            font-size: 32px;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        #messages {
+        #chatContainer {
             max-width: 600px;
             width: 100%;
             background-color: #ffffff;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
+            height: 90vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            overflow: hidden;
         }
 
-        .message {
-            margin-bottom: 15px;
-            padding: 12px;
-            border-radius: 10px;
-            background-color: #f1f1f1;
-            max-width: 80%;
-            word-wrap: break-word;
-            position: relative;
-        }
-
-        .message img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        #messageInput {
-            width: 65%;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #007bff;
-            border-radius: 10px;
-            outline: none;
-            margin-right: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #messageInput:focus {
-            border-color: #0056b3;
-        }
-
-        #sendButton, #uploadImage {
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        #sendButton {
-            background-color: #007bff;
-            color: white;
-            margin-right: 10px;
-            width: 15%;
-        }
-
-        #sendButton:hover {
-            background-color: #0056b3;
-        }
-
-        #uploadImage {
-            background-color: #4caf50;
-            color: white;
-            width: auto;
-        }
-
-        #uploadImage:hover {
-            background-color: #45a049;
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         #emojiPicker {
             display: flex;
             flex-wrap: wrap;
-            background-color: #ffffff;
+            background-color: #f9f9f9;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 10px;
             margin-bottom: 10px;
             gap: 10px;
-            justify-content: space-between;
+            justify-content: center;
         }
 
         #emojiPicker span {
@@ -130,24 +66,108 @@
             transform: scale(1.2);
         }
 
+        #messages {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .message.audio-message {
+            display: flex;
+            align-items: center;
+        }
+
+        #inputArea {
+            display: flex;
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        #messageInput:focus {
+            border-color: #0056b3;
+        }
+
+        button, label {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #sendButton {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+
+        #uploadImage {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #uploadImage:hover {
+            background-color: #45a049;
+        }
+
+        #voiceMessageButton {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        #voiceMessageButton:hover {
+            background-color: #e67e00;
+        }
+
         #imageInput {
             display: none;
         }
     </style>
 </head>
 <body>
-    <div>
-        <h1>Welcome to the Live Chat App!</h1>
+    <div id="chatContainer">
+        <h1>Live Chat</h1>
         <div id="emojiPicker">
-            <span>😀</span> <span>😂</span> <span>🥰</span> <span>😎</span> <span>🤔</span>
-            <span>🙃</span> <span>😢</span> <span>🎉</span> <span>❤️</span> <span>🥳</span>
+            😀 😂 🥰 😎 🤔 🙃 😢 🎉 ❤️ 🥳
         </div>
         <div id="messages"></div>
-        <div>
+        <div id="inputArea">
             <input id="messageInput" placeholder="Type a message..." />
             <button id="sendButton">Send</button>
             <input type="file" id="imageInput" accept=".jpg, .jpeg" />
             <label id="uploadImage" for="imageInput">Upload Image</label>
+            <button id="voiceMessageButton">🎤</button>
         </div>
         <audio id="notificationSound" src="notification.mp3"></audio>
     </div>
@@ -160,9 +180,10 @@
         const sendButton = document.getElementById("sendButton");
         const imageInput = document.getElementById("imageInput");
         const emojiPicker = document.getElementById("emojiPicker");
+        const voiceMessageButton = document.getElementById("voiceMessageButton");
         const notificationSound = document.getElementById("notificationSound");
 
-        // Send message when Send button is clicked
+        // Sending text message
         sendButton.onclick = () => {
             const msg = messageInput.value;
             if (msg.trim() !== "") {
@@ -171,7 +192,7 @@
             }
         };
 
-        // Send message when Enter key is pressed
+        // Sending on Enter key
         messageInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -183,16 +204,15 @@
             }
         });
 
-        // Emoji picker functionality
+        // Sending emoji
         emojiPicker.addEventListener("click", (event) => {
             if (event.target.tagName === "SPAN") {
-                // Append emoji to the message input field
-                messageInput.value += event.target.textContent.trim();
-                messageInput.focus(); // Keep the input field focused
+                messageInput.value += event.target.textContent;
+                messageInput.focus();
             }
         });
 
-        // Handle image uploads
+        // Sending images
         imageInput.addEventListener("change", (event) => {
             const file = event.target.files[0];
             if (file) {
@@ -204,7 +224,38 @@
             }
         });
 
-        // Display incoming messages
+        // Recording and sending voice messages
+        let mediaRecorder;
+        let chunks = [];
+
+        voiceMessageButton.onclick = async () => {
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    chunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(chunks, { type: "audio/webm" });
+                    chunks = [];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        socket.emit("message", { type: "audio", content: reader.result });
+                    };
+                    reader.readAsDataURL(audioBlob);
+                };
+
+                mediaRecorder.start();
+                voiceMessageButton.textContent = "🎤 Recording...";
+            } else {
+                mediaRecorder.stop();
+                voiceMessageButton.textContent = "🎤";
+            }
+        };
+
+        // Receiving messages
         socket.on("message", (msg) => {
             const messageElement = document.createElement("div");
             messageElement.classList.add("message");
@@ -212,9 +263,15 @@
             if (msg.type === "text") {
                 messageElement.textContent = msg.content;
             } else if (msg.type === "image") {
-                const imageElement = document.createElement("img");
-                imageElement.src = msg.content;
-                messageElement.appendChild(imageElement);
+                const img = document.createElement("img");
+                img.src = msg.content;
+                messageElement.appendChild(img);
+            } else if (msg.type === "audio") {
+                const audio = document.createElement("audio");
+                audio.src = msg.content;
+                audio.controls = true;
+                messageElement.classList.add("audio-message");
+                messageElement.appendChild(audio);
             }
 
             messages.appendChild(messageElement);
@@ -226,3 +283,4 @@
     </script>
 </body>
 </html>
+
